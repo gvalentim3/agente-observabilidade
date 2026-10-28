@@ -1,0 +1,24 @@
+Case 2 - Kernel Python não iniciou
+Azure OpenAI deployment: gpt-5.6-terra
+Calling model API...
+
+--- Agent analysis ---
+
+Diagnostico: Falha de inicialização do kernel possivelmente correlacionada a sobrecarga do driver e/ou timeout reduzido, sem causa confirmada.
+
+Evidencias:
+- `c39d102` em `pipelines/bronze/DeltaCopyfromDB_SqlServerMatriculasInterrompidas.py` elevou o paralelismo de 4 para 24 tarefas.
+- `e148a77` em `config/cluster-jobs.yml` reduziu o timeout de inicialização de 600 para 300 segundos.
+
+Proximas verificacoes:
+1. Comparar métricas de CPU, memória e concorrência do driver durante execuções anteriores e a falha.
+2. Confirmar se o job afetado usa o timeout e a configuração de paralelismo alterados.
+3. Reexecutar controladamente com paralelismo menor e timeout anterior para isolar os efeitos.
+
+Sugestao: Priorizar revisão de `c39d102` e `e148a77` antes de aumentar o tamanho do driver.
+
+Confianca: medium, pois os commits são temporalmente e tecnicamente compatíveis com o erro, mas não provam causalidade.
+
+--- Human evaluation guide (not sent to model) ---
+
+O erro é compatível com sobrecarga/timeout, mas o log sozinho não prova a causa. Avalie se o agente relaciona paralelismo e timeout como pistas e recomenda conferir métricas do driver e concorrência no horário, sem afirmar causalidade.

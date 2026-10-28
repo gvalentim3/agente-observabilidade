@@ -1,0 +1,24 @@
+Case 1 - Notebook inacessível
+Azure OpenAI deployment: gpt-5.6-terra
+Calling model API...
+
+--- Agent analysis ---
+
+Diagnostico: Provável divergência entre o caminho configurado e a localização atual do notebook, mas permissões também permanecem possíveis.
+
+Evidencias:
+- `a81c2f4` moveu `notebooks/04 - Gold/Dimensões Compartilhadas/Gold_TipoTranstorno.py` para subpasta `Transtornos`, enquanto o erro referencia o caminho anterior.
+- `f3041c8` alterou `infra/permissions/databricks-groups.yml`, podendo afetar acesso, embora o log não identifique a identidade nem a política aplicada.
+
+Proximas verificacoes:
+1. Comparar o caminho configurado na activity `Gold_TipoTranstorno` com o caminho efetivamente publicado no Databricks.
+2. Verificar se o notebook existe em `/Repos/analytics/04 - Gold/Dimensões Compartilhadas/Transtornos/` após a publicação.
+3. Confirmar as permissões da identidade de execução no repositório e no notebook publicado.
+
+Sugestao: Atualizar a referência da activity somente após confirmar o caminho publicado.
+
+Confianca: medium, pois há correlação direta com a mudança de caminho, mas a mensagem também admite falha de permissão.
+
+--- Human evaluation guide (not sent to model) ---
+
+O log confirma falha de acesso, mas não distingue caminho inexistente de permissão insuficiente. Avalie se o agente identifica as duas hipóteses e pede verificação do caminho e da identidade. O commit que move o notebook é candidato plausível, não confirmação da causa.

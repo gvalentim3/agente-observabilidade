@@ -1,0 +1,80 @@
+[
+  {
+    "id": "notebook-access",
+    "title": "Notebook inacessível",
+    "log": "Databricks / ADF (exemplo anonimizado)\nActivity: Gold_TipoTranstorno\nStatus: Failed\nError: Unable to access the notebook at /Repos/analytics/04 - Gold/Dimensões Compartilhadas/Gold_TipoTranstorno. Either it does not exist, or the identity used to run this job lacks the required permissions.",
+    "commits": [
+      {
+        "hash": "a81c2f4",
+        "date": "2026-09-28 20:58",
+        "file": "notebooks/04 - Gold/Dimensões Compartilhadas/Gold_TipoTranstorno.py",
+        "message": "Moveu um notebook da pasta Dimensões Compartilhadas para Dimensões Compartilhadas/Transtornos."
+      },
+      {
+        "hash": "bd729a0",
+        "date": "2026-09-28 20:31",
+        "file": "docs/README.md",
+        "message": "Atualizou a descrição do processo de publicação dos notebooks."
+      },
+      {
+        "hash": "f3041c8",
+        "date": "2026-09-27 18:12",
+        "file": "infra/permissions/databricks-groups.yml",
+        "message": "Renomeou um grupo de acesso usado em ambientes de desenvolvimento."
+      }
+    ],
+    "reviewGuide": "O log confirma falha de acesso, mas não distingue caminho inexistente de permissão insuficiente. Avalie se o agente identifica as duas hipóteses e pede verificação do caminho e da identidade. O commit que move o notebook é candidato plausível, não confirmação da causa."
+  },
+  {
+    "id": "python-kernel-timeout",
+    "title": "Kernel Python não iniciou",
+    "log": "Databricks / ADF (exemplo anonimizado)\nActivity: DeltaCopyfromDB_SqlServerMatriculasInterrompidas\nStatus: Failed\nDuration: 452s\nError: Failure starting repl. The Python kernel did not start within the timeout. The driver may be overloaded, especially when many tasks run concurrently. Check driver CPU and memory; reduce task parallelism or use a larger driver if the issue persists.",
+    "commits": [
+      {
+        "hash": "c39d102",
+        "date": "2026-10-26 16:42",
+        "file": "pipelines/bronze/DeltaCopyfromDB_SqlServerMatriculasInterrompidas.py",
+        "message": "Aumentou o paralelismo configurado de 4 para 24 tarefas."
+      },
+      {
+        "hash": "e148a77",
+        "date": "2026-10-26 15:08",
+        "file": "config/cluster-jobs.yml",
+        "message": "Reduziu o timeout de inicialização do job de 600 para 300 segundos."
+      },
+      {
+        "hash": "50ad62e",
+        "date": "2026-10-25 19:16",
+        "file": "notebooks/bronze/ValidacaoMatriculas.py",
+        "message": "Ajustou uma mensagem de log de validação."
+      }
+    ],
+    "reviewGuide": "O erro é compatível com sobrecarga/timeout, mas o log sozinho não prova a causa. Avalie se o agente relaciona paralelismo e timeout como pistas e recomenda conferir métricas do driver e concorrência no horário, sem afirmar causalidade."
+  },
+  {
+    "id": "ambiguous-sql-column",
+    "title": "Coluna SQL ambígua",
+    "log": "Databricks / ADF (exemplo anonimizado)\nActivity: Simulados_Gold_FatAlunoNotaTRI\nStatus: Failed\nError: [AMBIGUOUS_REFERENCE] Reference `Codigo` is ambiguous, could be: [`dp`.`Codigo`, `sp`.`Codigo`]. SQLSTATE: 42704. SQL line 10: coalesce(cast(Codigo as int), 0) desc.",
+    "commits": [
+      {
+        "hash": "e5b71aa",
+        "date": "2026-10-26 00:49",
+        "file": "sql/simulados/Gold_FatAlunoNotaTRI.sql",
+        "message": "Adicionou uma junção com a tabela de situação do participante."
+      },
+      {
+        "hash": "8d0c30f",
+        "date": "2026-10-25 23:52",
+        "file": "sql/simulados/Gold_FatAlunoNotaTRI.sql",
+        "message": "Reorganizou as expressões do ORDER BY."
+      },
+      {
+        "hash": "a621fd9",
+        "date": "2026-10-25 20:04",
+        "file": "sql/dimensoes/DimPeriodo.sql",
+        "message": "Alterou o tipo de uma coluna de data."
+      }
+    ],
+    "reviewGuide": "O log confirma a ambiguidade e lista os dois aliases, mas não informa qual coluna atende à regra de negócio. Avalie se o agente aponta a junção recente como candidata e sugere qualificar Codigo, sem escolher dp ou sp sem contexto adicional."
+  }
+]

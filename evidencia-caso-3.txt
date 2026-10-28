@@ -1,0 +1,24 @@
+Case 3 - Coluna SQL ambígua
+Azure OpenAI deployment: gpt-5.6-terra
+Calling model API...
+
+--- Agent analysis ---
+
+Diagnostico: A falha decorre provavelmente de `Codigo` sem qualificador no `ORDER BY`, após a junção introduzir colunas homônimas.
+
+Evidencias:
+- `e5b71aa` em `sql/simulados/Gold_FatAlunoNotaTRI.sql` adiciona junção com situação do participante, compatível com `dp.Codigo` e `sp.Codigo`.
+- `8d0c30f` no mesmo arquivo reorganiza o `ORDER BY`; o log aponta a linha com `coalesce(cast(Codigo as int), 0)`.
+
+Proximas verificacoes:
+1. Revisar o SQL na linha 10 e qualificar `Codigo` como `dp.Codigo` ou `sp.Codigo` conforme a ordenação esperada.
+2. Comparar o `ORDER BY` antes e depois de `8d0c30f` para identificar quando o qualificador foi removido.
+3. Validar se ambas as tabelas expõem `Codigo` após a junção.
+
+Sugestao: Corrigir a referência ambígua com o alias semanticamente correto.
+
+Confianca: high, pois a mensagem identifica explicitamente as duas colunas conflitantes.
+
+--- Human evaluation guide (not sent to model) ---
+
+O log confirma a ambiguidade e lista os dois aliases, mas não informa qual coluna atende à regra de negócio. Avalie se o agente aponta a junção recente como candidata e sugere qualificar Codigo, sem escolher dp ou sp sem contexto adicional.
